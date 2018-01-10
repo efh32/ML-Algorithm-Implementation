@@ -1,5 +1,7 @@
 k.means.plus.plus <- function(input.data, num.clusters, threshold = 0.1){
-  #Implementation of Lloyd's algorithm for k-means
+  #Implementation of David Arthur and Sergei Vassilvitskii's k-means++
+  #algorithm.  K-means++ uses a new initialization algorithm for choosing
+  #the initial values of the centroids.  
   #
   #Args:
   #  input.data - Data that is to be partitioned with k-means algorithm
@@ -73,6 +75,24 @@ k.means.plus.plus <- function(input.data, num.clusters, threshold = 0.1){
 }
 
 initialization.plus.plus <- function(input.data, num.clusters){
+  #Initializes centroids with the following algorithm:
+  #  1)Choose a data point uniformly at random as the first centroid
+  #  2)Assign each data point to the nearest centroid.  For first iteration
+  #    all data points are assigned to the first centroid.
+  #  3)Choose a new data point at random to be next centroid.  Use a probability
+  #    distribution where a data point further away from its assigned centroid
+  #    (in terms of Euclidean Distance) has a higher probability of being chosen.
+  #  4)Repeat steps 2) and 3) until num.clusters centroids have been chosen.
+  #The goal for initialization is to not initialize centroids that are close
+  #in proximity.
+  #
+  #Args:
+  #  input.data - Data that is to be partitioned with k-means algorithm
+  #  num.clusters - Number of clusters(k) for data
+  #
+  #Returns:
+  #  old.centroids - starting centroid(mean) for each cluster
+  #
   #assign one data point as initial center uniformly at random
   old.centroids <- matrix(input.data[sample(nrow(input.data),1), ], nrow = 1)
   for(i in 1:(num.clusters-1)){
